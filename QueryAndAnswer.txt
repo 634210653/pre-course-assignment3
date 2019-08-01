@@ -1,0 +1,52 @@
+---@autor LP
+---@time 2019.8.1
+---
+Q1:
+select name from member where id in (
+    select member_id from book as b left join  checkout_item as c
+      on b.title = 'The Hobbit' and b.id = c.book_id
+ );
+
+ Ans:
+ Anand Beck
+
+ Q2:
+ select count(*) from member where id not in (select distinct member_id from checkout_item);
+ Ans:
+ 37
+
+ Q3:
+select 'book:',title from book where id not in (select distinct book_id from checkout_item where book_id is not null)
+union
+select 'movie:', title  from movie where id  not in ( select distinct movie_id from checkout_item where  movie_id is not null );
+
+Ans:
+book:	1984
+book:	Catcher in the Rye
+book:	Domain Driven Design
+book:	Fellowship of the Ring
+book:	To Kill a Mockingbird
+book:	Tom Sawyer
+movie:	Crouching Tiger, Hidden Dragon
+movie:	Lawrence of Arabia
+movie:	Office Space
+movie:	Thin Red Line
+
+Q4:
+insert into book(title) values('The Pragmatic Programmer');
+insert into member(name) values ("Pei Luo");
+insert into checkout_item(member_id, book_id) VALUES (43,11);
+select name from member where id in (
+    select member_id from book as b left join  checkout_item as c
+      on b.title = 'The Pragmatic Programmer' and b.id = c.book_id
+);
+Ans:
+Pei Luo
+
+Q5:
+select name from member as  m inner join (
+    select member_id,count(member_id) as num from checkout_item group by member_id) as tmp
+on m.id = tmp.member_id and tmp.num>1;
+Ans:
+Anand Beck
+Frank Smith
